@@ -1,0 +1,57 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Velo",
+  "classifications": [
+    "Web",
+    "ASP.NET",
+    "Minimal API",
+    "MediatR",
+    "EF Core"
+  ],
+  "identity": "Velo.ModularMonolith",
+  "name": "Velo Modular Monolith",
+  "shortName": "velo",
+  "sourceName": "Velo",
+  "defaultName": "Velo",
+  "preferNameDirectory": true,
+  "tags": {
+    "language": "C#",
+    "type": "solution"
+  },
+  "description": "ASP.NET Core Minimal API + MediatR + EF Core 模块化单体（Vertical Slice）脚手架",
+  "symbols": {
+    "Framework": {
+      "type": "parameter",
+      "description": "目标框架",
+      "datatype": "choice",
+      "choices": [
+        {
+          "choice": "net9.0",
+          "description": ".NET 9.0"
+        }
+      ],
+      "defaultValue": "net9.0",
+      "replaces": "net9.0"
+    }
+  },
+  "primaryOutputs": [
+    { "path": "Velo.sln" },
+    { "path": "src/Velo.Api/Velo.Api.csproj" }
+  ],
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            "**/bin/**",
+            "**/obj/**",
+            "**/.git/**",
+            "**/.vs/**",
+            "**/.idea/**",
+            "**/TestResults/**"
+          ]
+        }
+      ]
+    }
+  ]
+}

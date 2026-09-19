@@ -1,0 +1,12 @@
+@baseUrl = http://localhost:5213
+
+### 创建任务
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+
+{
+  "title": "Learn Vertical Slice Architecture"
+}
+
+### 获取任务列表
+GET {{baseUrl}}/tasks
