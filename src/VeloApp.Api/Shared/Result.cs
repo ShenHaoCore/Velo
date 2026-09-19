@@ -1,4 +1,4 @@
-namespace Velo.Api.Shared;
+namespace VeloApp.Api.Shared;
 
 /// <summary>
 /// 统一 API 返回类型：封装成功/失败，避免到处抛异常表达业务失败。

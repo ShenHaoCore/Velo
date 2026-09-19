@@ -1,14 +1,14 @@
 using MediatR;
-using Velo.Api.Features.Notifications;
-using Velo.Api.Shared;
+using VeloApp.Api.Features.Notifications;
+using VeloApp.Api.Shared;
 
-namespace Velo.Api.Features.Tasks;
+namespace VeloApp.Api.Features.Tasks;
 
 // ---- Command ----
 public sealed record CreateTaskCommand(string Title) : IRequest<Result<Guid>>;
 
 // ---- Handler：直接注入 DbContext，不建仓储 ----
-// MediatR 14 接口方法名为 Handle（返回 Task 即异步）；业务侧不另造 HandleAsync 假合规
+// MediatR 14 接口方法名为 Handle（返回 Task 即异步）
 internal sealed class CreateTaskHandler(AppDbContext db, IPublisher publisher)
     : IRequestHandler<CreateTaskCommand, Result<Guid>>
 {

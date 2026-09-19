@@ -1,8 +1,8 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Velo.Api.Shared;
+using VeloApp.Api.Shared;
 
-namespace Velo.Api.Features.Tasks;
+namespace VeloApp.Api.Features.Tasks;
 
 // ---- Query ----
 public sealed record GetTasksQuery : IRequest<Result<IReadOnlyList<TaskDto>>>;

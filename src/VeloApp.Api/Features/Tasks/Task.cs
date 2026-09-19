@@ -1,4 +1,4 @@
-namespace Velo.Api.Features.Tasks;
+namespace VeloApp.Api.Features.Tasks;
 
 /// <summary>
 /// 任务实体：internal 限制在本程序集内可见，控制模块边界。

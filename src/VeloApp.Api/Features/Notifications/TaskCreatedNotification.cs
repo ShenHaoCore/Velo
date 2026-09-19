@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Velo.Api.Features.Notifications;
+namespace VeloApp.Api.Features.Notifications;
 
 /// <summary>
 /// 任务创建后的进程内事件；其它模块通过 INotificationHandler 订阅。

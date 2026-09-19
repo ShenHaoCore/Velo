@@ -1,8 +1,8 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
-using Velo.Api.Features.Tasks;
-using Velo.Api.Shared;
+using VeloApp.Api.Features.Tasks;
+using VeloApp.Api.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +11,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
 // SQLite 内存库：keepalive 连接仅防止库被回收；DbContext 各自用连接字符串开连接（避免共用同一实例的线程安全问题）
-const string sqliteConnectionString = "Data Source=Velo;Mode=Memory;Cache=Shared";
+const string sqliteConnectionString = "Data Source=VeloApp;Mode=Memory;Cache=Shared";
 var keepAliveConnection = new SqliteConnection(sqliteConnectionString);
 keepAliveConnection.Open();
 builder.Services.AddSingleton(keepAliveConnection);

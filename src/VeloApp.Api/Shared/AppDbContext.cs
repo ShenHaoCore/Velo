@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TaskEntity = Velo.Api.Features.Tasks.Task;
+using TaskEntity = VeloApp.Api.Features.Tasks.Task;
 
-namespace Velo.Api.Shared;
+namespace VeloApp.Api.Shared;
 
 /// <summary>
 /// 单一 DbContext：轻量模块化单体里直接注入使用，不引入仓储抽象。

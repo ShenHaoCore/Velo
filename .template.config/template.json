@@ -8,17 +8,17 @@
     "MediatR",
     "EF Core"
   ],
-  "identity": "Velo.ModularMonolith",
+  "identity": "VeloApp.ModularMonolith",
   "name": "Velo Modular Monolith",
   "shortName": "velo",
-  "sourceName": "Velo",
-  "defaultName": "Velo",
+  "sourceName": "VeloApp",
+  "defaultName": "VeloApp",
   "preferNameDirectory": true,
   "tags": {
     "language": "C#",
     "type": "solution"
   },
-  "description": "ASP.NET Core Minimal API + MediatR + EF Core 模块化单体（Vertical Slice）脚手架",
+  "description": "ASP.NET Core Minimal API + MediatR + EF Core 模块化单体（Vertical Slice）脚手架。sourceName 使用 VeloApp，避免替换时误伤 Development。",
   "symbols": {
     "Framework": {
       "type": "parameter",
@@ -35,8 +35,8 @@
     }
   },
   "primaryOutputs": [
-    { "path": "Velo.sln" },
-    { "path": "src/Velo.Api/Velo.Api.csproj" }
+    { "path": "VeloApp.sln" },
+    { "path": "src/VeloApp.Api/VeloApp.Api.csproj" }
   ],
   "sources": [
     {

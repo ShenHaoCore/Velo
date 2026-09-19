@@ -3,7 +3,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace Velo.Api.Tests;
+namespace VeloApp.Api.Tests;
 
 public sealed class TasksApiTests : IClassFixture<WebApplicationFactory<Program>>
 {

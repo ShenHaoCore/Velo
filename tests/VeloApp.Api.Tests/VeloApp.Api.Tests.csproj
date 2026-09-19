@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Velo.Api\Velo.Api.csproj" />
+    <ProjectReference Include="..\..\src\VeloApp.Api\VeloApp.Api.csproj" />
   </ItemGroup>
 
 </Project>
