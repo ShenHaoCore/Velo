@@ -21,3 +21,8 @@ Desktop.ini
 # Secrets
 appsettings.*.local.json
 *.pfx
+
+# Local SQLite
+*.db
+*.db-shm
+*.db-wal

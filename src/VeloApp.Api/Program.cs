@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
@@ -6,28 +7,62 @@ using VeloApp.Api.Shared;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddProblemDetails();
+
 // MediatR：扫描本程序集中的 Handler / NotificationHandler
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-// SQLite 内存库：keepalive 连接仅防止库被回收；DbContext 各自用连接字符串开连接（避免共用同一实例的线程安全问题）
-const string sqliteConnectionString = "Data Source=VeloApp;Mode=Memory;Cache=Shared";
-var keepAliveConnection = new SqliteConnection(sqliteConnectionString);
-keepAliveConnection.Open();
-builder.Services.AddSingleton(keepAliveConnection);
+// 连接串来自配置；内存库需 keepalive，避免共享缓存被回收
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? "Data Source=VeloApp;Mode=Memory;Cache=Shared";
+var useInMemorySqlite = connectionString.Contains("Mode=Memory", StringComparison.OrdinalIgnoreCase);
+
+if (useInMemorySqlite)
+{
+    var keepAliveConnection = new SqliteConnection(connectionString);
+    keepAliveConnection.Open();
+    builder.Services.AddSingleton(keepAliveConnection);
+}
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(sqliteConnectionString));
+    options.UseSqlite(connectionString));
 
 // OpenAPI 文档 + Scalar UI
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// 启动时建表（内存库无迁移必要）
+app.UseExceptionHandler(exceptionApp =>
+{
+    exceptionApp.Run(async context =>
+    {
+        var error = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+
+        if (error is BadHttpRequestException badRequest)
+        {
+            await Results.Problem(
+                    title: badRequest.Message,
+                    statusCode: badRequest.StatusCode)
+                .ExecuteAsync(context);
+            return;
+        }
+
+        await Results.Problem(
+                title: "An unexpected error occurred.",
+                statusCode: StatusCodes.Status500InternalServerError)
+            .ExecuteAsync(context);
+    });
+});
+
+// 内存库用 EnsureCreated；文件/服务器库用 Migrate（见 Migrations/）
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.EnsureCreated();
+    if (useInMemorySqlite)
+        await db.Database.EnsureCreatedAsync();
+    else
+        await db.Database.MigrateAsync();
 }
 
 if (app.Environment.IsDevelopment())
@@ -39,6 +74,8 @@ if (app.Environment.IsDevelopment())
 // Vertical Slice：各功能自行注册路由，直接映射到 MediatR
 app.MapCreateTask();
 app.MapGetTasks();
+app.MapCompleteTask();
+app.MapDeleteTask();
 
 app.Run();
 

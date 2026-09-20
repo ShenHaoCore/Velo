@@ -8,5 +8,11 @@ Content-Type: application/json
   "title": "Learn Vertical Slice Architecture"
 }
 
-### 获取任务列表
-GET {{baseUrl}}/tasks
+### 获取任务列表（分页）
+GET {{baseUrl}}/tasks?page=1&pageSize=50
+
+### 完成任务
+POST {{baseUrl}}/tasks/{{taskId}}/complete
+
+### 删除任务
+DELETE {{baseUrl}}/tasks/{{taskId}}

@@ -8,22 +8,24 @@ namespace VeloApp.Api.Features.Tasks;
 public sealed record CreateTaskCommand(string Title) : IRequest<Result<Guid>>;
 
 // ---- Handler：直接注入 DbContext，不建仓储 ----
-// MediatR 14 接口方法名为 Handle（返回 Task 即异步）
 internal sealed class CreateTaskHandler(AppDbContext db, IPublisher publisher)
     : IRequestHandler<CreateTaskCommand, Result<Guid>>
 {
-    // 返回类型须写全名，避免与实体 Task 冲突
-    public async System.Threading.Tasks.Task<Result<Guid>> Handle(
+    public async Task<Result<Guid>> Handle(
         CreateTaskCommand request,
         CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(request.Title))
             return Result<Guid>.Failure("Title is required.");
 
-        var task = new Task
+        var title = request.Title.Trim();
+        if (title.Length > TodoItem.TitleMaxLength)
+            return Result<Guid>.Failure($"Title must be at most {TodoItem.TitleMaxLength} characters.");
+
+        var task = new TodoItem
         {
             Id = Guid.NewGuid(),
-            Title = request.Title.Trim(),
+            Title = title,
             IsCompleted = false
         };
 
@@ -44,7 +46,9 @@ public static class CreateTaskEndpoint
 {
     public static RouteHandlerBuilder MapCreateTask(this IEndpointRouteBuilder app) =>
         app.MapPost("/tasks", (CreateTaskCommand command, ISender sender, CancellationToken ct) =>
-                sender.Send(command, ct))
+                sender.Send(command, ct).ToHttpResultAsync(StatusCodes.Status201Created))
             .WithName("CreateTask")
-            .WithTags("Tasks");
+            .WithTags("Tasks")
+            .Produces<Result<Guid>>(StatusCodes.Status201Created)
+            .Produces<Result<Guid>>(StatusCodes.Status400BadRequest);
 }
